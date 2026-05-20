@@ -141,8 +141,19 @@ app.post('/api/orders', (req, res) => {
 });
 
 app.get('/api/orders/user/:userId', (req, res) => {
-    db.all('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', [req.params.userId], (err, orders) => {
+    db.all('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', [req.params.userId], async (err, orders) => {
         if (err) return res.status(500).json({ error: err.message });
+        
+        // Fetch items for each order
+        for (let order of orders) {
+            await new Promise((resolve) => {
+                db.all('SELECT * FROM order_items WHERE order_id = ?', [order.id], (err, items) => {
+                    order.items = items || [];
+                    resolve();
+                });
+            });
+        }
+        
         res.json(orders);
     });
 });
@@ -158,9 +169,20 @@ app.get('/api/orders/:id', (req, res) => {
     });
 });
 
-app.get('/api/orders', (req, res) => {
-    db.all('SELECT * FROM orders ORDER BY created_at DESC', [], (err, orders) => {
+app.get('/api/orders', async (req, res) => {
+    db.all('SELECT * FROM orders ORDER BY created_at DESC', [], async (err, orders) => {
         if (err) return res.status(500).json({ error: err.message });
+        
+        // Fetch items for each order
+        for (let order of orders) {
+            await new Promise((resolve) => {
+                db.all('SELECT * FROM order_items WHERE order_id = ?', [order.id], (err, items) => {
+                    order.items = items || [];
+                    resolve();
+                });
+            });
+        }
+        
         res.json(orders);
     });
 });
@@ -214,15 +236,26 @@ function verifyAdminToken(req, res, next) {
     }
 }
 
-// Get all orders with customer info (admin only)
-app.get('/api/admin/orders', verifyAdminToken, (req, res) => {
+// Get all orders with items (admin only)
+app.get('/api/admin/orders', verifyAdminToken, async (req, res) => {
     db.all(`
         SELECT o.*, u.username as user_name 
         FROM orders o 
         LEFT JOIN users u ON o.user_id = u.id 
         ORDER BY o.created_at DESC
-    `, [], (err, orders) => {
+    `, [], async (err, orders) => {
         if (err) return res.status(500).json({ error: err.message });
+        
+        // Fetch items for each order
+        for (let order of orders) {
+            await new Promise((resolve) => {
+                db.all('SELECT * FROM order_items WHERE order_id = ?', [order.id], (err, items) => {
+                    order.items = items || [];
+                    resolve();
+                });
+            });
+        }
+        
         res.json(orders);
     });
 });
