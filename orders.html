@@ -451,7 +451,8 @@
                 let itemsHtml = '';
                 if (order.items && order.items.length > 0) {
                     order.items.forEach(i => {
-                        itemsHtml += `<div class="modal-item"><div>${i.product_name} x${i.quantity}</div><div>₱${(i.price*i.quantity).toFixed(2)}</div></div>`;
+                        // FIX: Wrapped i.price and i.quantity in Number()
+                        itemsHtml += `<div class="modal-item"><div>${i.product_name} x${i.quantity}</div><div>₱${(Number(i.price)*Number(i.quantity)).toFixed(2)}</div></div>`;
                     });
                 } else {
                     itemsHtml = '<div style="text-align: center; color: #999; padding: 10px;">No items found</div>';
@@ -471,7 +472,8 @@
                 }
                 
                 document.getElementById('modalOrderSummary').innerHTML = paymentHtml;
-                document.getElementById('modalOrderTotal').innerHTML = `Total: ₱${order.total.toFixed(2)}`;
+                // FIX: Wrapped order.total in Number()
+                document.getElementById('modalOrderTotal').innerHTML = `Total: ₱${Number(order.total).toFixed(2)}`;
                 document.getElementById('orderModal').classList.add('open');
             } catch(e) { 
                 console.error('Error:', e);

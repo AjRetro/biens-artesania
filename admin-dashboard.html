@@ -358,7 +358,8 @@
                 let itemsHtml = '<ul>';
                 if (order.items && order.items.length > 0) {
                     order.items.forEach(item => {
-                        itemsHtml += `<li>${item.product_name} x ${item.quantity} = ₱${(item.price * item.quantity).toFixed(2)}</li>`;
+                        // FIX: Wrapped item.price and item.quantity in Number()
+                        itemsHtml += `<li>${item.product_name} x ${item.quantity} = ₱${(Number(item.price) * Number(item.quantity)).toFixed(2)}</li>`;
                     });
                 } else {
                     itemsHtml = '<li style="color: #999;">No items found</li>';
@@ -369,7 +370,8 @@
                 let paymentInfo = `<p><strong>Customer:</strong> ${order.customer_name}</p>`;
                 paymentInfo += `<p><strong>Email:</strong> ${order.customer_email}</p>`;
                 paymentInfo += `<p><strong>Payment Method:</strong> ${order.payment_method}</p>`;
-                paymentInfo += `<p><strong>Total:</strong> ₱${order.total.toFixed(2)}</p>`;
+                // FIX: Wrapped order.total in Number()
+                paymentInfo += `<p><strong>Total:</strong> ₱${Number(order.total).toFixed(2)}</p>`;
                 
                 if (order.payment_method === 'GCash') {
                     paymentInfo += `<div style="margin-top: 15px; padding: 15px; background: #f0f7ff; border-radius: 8px; text-align: center; border: 2px solid #667eea;">
