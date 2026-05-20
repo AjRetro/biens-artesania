@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let cart = [];
     let allProducts = [];
     let currentUser = null;
-    const API_URL = 'http://localhost:3000/api';
+    const API_URL = `${window.location.origin}/api`;
 
     // DOM elements
     const cartModal = document.getElementById("cartModal");
