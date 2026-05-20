@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bien's Artesania</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Dynamic Header: shows login/register or user info -->
+    <div style="background: #f0f7ff; padding: 10px 20px; text-align: right; border-bottom: 1px solid #d0dbe8;">
+        <span id="userGreeting" style="font-size: 14px; color: #333;">
+            <a href="/auth.html" style="color: #667eea; text-decoration: none; font-weight: 600;">Login</a> or 
+            <a href="/auth.html" style="color: #667eea; text-decoration: none; font-weight: 600;">Register</a> to add items to cart
+        </span>
+        <span id="userInfoLoggedIn" style="display: none;">
+            Welcome, <strong id="userName">User</strong>!
+            &nbsp; | &nbsp;
+            <a href="/orders.html" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                <i class="fas fa-history"></i> View Orders
+            </a>
+            &nbsp; | &nbsp;
+            <button onclick="logout()" style="background: #ed2c91; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 14px;">Logout</button>
+        </span>
+    </div>
+    
+    <header class="site-header">
+        <div class="header-container">
+            <div class="brand">
+                <img src="brand-logo.jpg" alt="Logo" class="brand-logo">
+                <div class="brand-text">
+                    <span class="brand-name">Bien's Artesania</span>
+                    <span class="brand-subtitle">Arts & Crafts</span>
+                </div>
+            </div>
+            <nav class="site-nav">
+                <a href="#mugs">Mugs & Cups</a>
+                <a href="#plates">Plates & Bowls</a>
+                <a href="#decor">Home Decor</a>
+                <a href="#classes">Classes</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-copy">
+            <p class="eyebrow">Handmade with care</p>
+            <h1>Bien's Artesania: original handcrafted gifts for every home.</h1>
+            <p class="hero-description">Each item is designed, stitched, and finished by hand in our studio workshop. Authentic craft, thoughtful details, and one-of-a-kind pieces for everyday living.</p>
+            <a href="#featured" class="hero-button">Shop the Bestsellers</a>
+        </div>
+    </section>
+
+    <section class="about-grid">
+        <article class="about-card">
+            <h3>Small-Batch Quality</h3>
+            <p>Every piece is made in small quantities so each product stays unique, personal, and carefully finished.</p>
+        </article>
+        <article class="about-card">
+            <h3>Local Craft Studio</h3>
+            <p>Created from a local studio using handcrafted techniques, natural materials, and gentle color palettes.</p>
+        </article>
+        <article class="about-card">
+            <h3>Gifts That Feel Special</h3>
+            <p>Perfect for gifts, decor, or daily use — designed to feel cozy, warm, and memorable.</p>
+        </article>
+    </section>
+
+    <section id="featured" class="featured-grid">
+        <h2>Back in stock</h2>
+        <div class="grid"></div> <!-- products injected here by JS -->
+    </section>
+
+    <section class="contact-info-bar">
+        <div class="info-item">
+            <i class="fa-solid fa-location-dot icon-box"></i>
+            <strong>Find Us</strong>
+            <p><a href="https://www.google.com/maps/search/Talisay,+Camarines+Norte,+Bicol,+Philippines" target="_blank">Talisay, Camarines Norte, Bicol, PH</a></p>
+        </div>
+        <div class="info-item">
+            <i class="fa-solid fa-comment-dots icon-box"></i>
+            <strong>Message Us</strong>
+            <p><a href="https://www.facebook.com/profile.php?id=61550768738195" target="_blank">Facebook: Bien's Artesania</a></p>
+        </div>
+        <div class="info-item">
+            <i class="fa-solid fa-phone icon-box"></i>
+            <strong>Call Us</strong>
+            <p><a href="tel:+19078200601">+1 907-820-0601</a></p>
+        </div>
+        <div class="info-item">
+            <i class="fa-solid fa-truck icon-box"></i>
+            <strong>Shipping Partners</strong>
+            <p>Flash Express | J&T Express</p>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p>Bien's Artesania — handmade gifts and decor.</p>
+        <p>Contact: <a href="mailto:hello@biensartesania.com">hello@biensartesania.com</a></p>
+    </footer>
+
+    <div class="cart-widget">
+        <button id="viewCart">
+            <span>Cart</span>
+            <span id="cartCount" class="cart-count">0</span>
+        </button>
+    </div>
+
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2>Your Craft Basket</h2>
+                <button id="closeCart">×</button>
+            </div>
+            <div id="cartItems" class="cart-items-container">
+                <p class="empty-msg">Your basket is empty. Fill it with something special!</p>
+            </div>
+            <div class="cart-footer">
+                <div class="payment-selection" style="margin-bottom: 15px;">
+                    <label for="paymentMethod" style="display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 5px; color: #333; text-transform: uppercase;">Payment Method:</label>
+                    <select id="paymentMethod" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #d0dbe8; background: #fff; font-family: 'Inter', sans-serif;">
+                        <option value="GCash">GCash</option>
+                        <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+                    </select>
+                </div>
+                <div class="cart-total" style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.2rem; margin-bottom: 20px;">
+                    <span>Total:</span>
+                    <span id="totalPrice">₱0</span>
+                </div>
+                <button id="checkoutBtn" class="hero-button" style="width: 100%; background-color: #ed2c91; color: white; border: none; padding: 15px; border-radius: 50px; font-weight: 600; cursor: pointer;">Check Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="snackbar" class="snackbar"></div>
+    <script src="script.js"></script>
+</body>
+</html>
