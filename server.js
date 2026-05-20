@@ -58,7 +58,7 @@ app.post('/api/auth/register', (req, res) => {
         return res.status(400).json({ error: 'Username, email, and password required' });
     }
     db.run(
-        'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+        'INSERT INTO users (username, email, password) VALUES (?, ?, ?) RETURNING id',
         [username, email, password],
         function(err) {
             if (err) {
@@ -119,7 +119,7 @@ app.post('/api/orders', (req, res) => {
         return res.status(400).json({ error: 'Order must contain items' });
     }
     db.run(
-        'INSERT INTO orders (customer_name, customer_email, customer_phone, payment_method, total, status, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO orders (customer_name, customer_email, customer_phone, payment_method, total, status, user_id) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id',
         [customer_name || 'Guest', customer_email || '', customer_phone || '', payment_method, total, 'pending', user_id || null],
         function(err) {
             if (err) return res.status(500).json({ error: err.message });
@@ -302,7 +302,7 @@ app.post('/api/admin/products', verifyAdminToken, (req, res) => {
         return res.status(400).json({ error: 'Name, price, and image are required' });
     }
     db.run(
-        'INSERT INTO products (name, price, image) VALUES (?, ?, ?)',
+        'INSERT INTO products (name, price, image) VALUES (?, ?, ?) RETURNING id',
         [name, price, image],
         function(err) {
             if (err) {
