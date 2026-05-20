@@ -446,14 +446,37 @@
                 const res = await fetch(`${API_URL}/orders/${id}`);
                 const order = await res.json();
                 document.getElementById('modalOrderTitle').innerHTML = `Order #${order.id} (${order.status})`;
+                
+                // Display items
                 let itemsHtml = '';
-                order.items.forEach(i => itemsHtml += `<div class="modal-item"><div>${i.product_name} x${i.quantity}</div><div>₱${i.price*i.quantity}</div></div>`);
+                if (order.items && order.items.length > 0) {
+                    order.items.forEach(i => {
+                        itemsHtml += `<div class="modal-item"><div>${i.product_name} x${i.quantity}</div><div>₱${(i.price*i.quantity).toFixed(2)}</div></div>`;
+                    });
+                } else {
+                    itemsHtml = '<div style="text-align: center; color: #999; padding: 10px;">No items found</div>';
+                }
                 document.getElementById('modalOrderItems').innerHTML = itemsHtml;
+                
+                // Display payment info with GCash QR if applicable
                 const date = new Date(order.created_at);
-                document.getElementById('modalOrderSummary').innerHTML = `<p>Date: ${date.toLocaleString()}</p><p>Payment: ${order.payment_method}</p><p>Customer: ${order.customer_name}</p>`;
-                document.getElementById('modalOrderTotal').innerHTML = `Total: ₱${order.total}`;
+                let paymentHtml = `<p>Date: ${date.toLocaleString()}</p><p>Payment: ${order.payment_method}</p><p>Customer: ${order.customer_name}</p>`;
+                
+                if (order.payment_method === 'GCash') {
+                    paymentHtml += `<div style="margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; text-align: center;">
+                        <p style="font-weight: bold; color: #667eea; margin-bottom: 10px;">GCash Payment QR Code</p>
+                        <img src="/uploads/gcash_qr_code.png" alt="GCash QR" style="max-width: 200px; border-radius: 6px;">
+                        <p style="font-size: 12px; color: #666; margin-top: 8px;">Scan to pay via GCash</p>
+                    </div>`;
+                }
+                
+                document.getElementById('modalOrderSummary').innerHTML = paymentHtml;
+                document.getElementById('modalOrderTotal').innerHTML = `Total: ₱${order.total.toFixed(2)}`;
                 document.getElementById('orderModal').classList.add('open');
-            } catch(e) { alert('Could not load details'); }
+            } catch(e) { 
+                console.error('Error:', e);
+                alert('Could not load details'); 
+            }
         };
 
         window.closeOrderModal = () => document.getElementById('orderModal').classList.remove('open');
